@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.imatveev.algorithms.sort.*;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,23 +13,23 @@ import static ru.imatveev.algorithms.util.TestUtil.getRandom;
 import static ru.imatveev.algorithms.util.TestUtil.isSorted;
 
 public class SortTest {
-    private static ISorter insertionSorter;
-    private static ISorter binaryInsertionSorter;
-    private static ISorter selectionSorter;
-    private static ISorter bubbleSorter;
-    private static ISorter shakerSorter;
-    private static ISorter shellSorter;
-    private static ISorter heapSorter;
+    private static ISorter<Integer> insertionSorter;
+    private static ISorter<Integer> binaryInsertionSorter;
+    private static ISorter<Integer> selectionSorter;
+    private static ISorter<Integer> bubbleSorter;
+    private static ISorter<Integer> shakerSorter;
+    private static ISorter<Integer> shellSorter;
+    private static ISorter<Integer> heapSorter;
 
     @BeforeAll
     public static void init() {
-        insertionSorter = new InsertionSorter();
-        binaryInsertionSorter = new BinaryInsertionSorter();
-        selectionSorter = new SelectionSorter();
-        bubbleSorter = new BubbleSorter();
-        shakerSorter = new ShakerSorter();
-        shellSorter = new ShellSorter();
-        heapSorter = new HeapSorter();
+        insertionSorter = new InsertionSorter<>();
+        binaryInsertionSorter = new BinaryInsertionSorter<>();
+        selectionSorter = new SelectionSorter<>();
+        bubbleSorter = new BubbleSorter<>();
+        shakerSorter = new ShakerSorter<>();
+        shellSorter = new ShellSorter<>();
+        heapSorter = new HeapSorter<>();
     }
 
     @Test
@@ -66,20 +67,21 @@ public class SortTest {
         test(heapSorter);
     }
 
-    private void test(ISorter iSorter) {
+    private void test(ISorter<Integer> iSorter) {
+        Comparator<Integer> comparator = Integer::compareTo;
         Stream.generate(() -> getRandom(100))
                 .parallel()
                 .limit(100)
                 .forEach(
                         data -> assertTrue(
-                                isSorted(iSorter.sort(data)),
-                                getMessage(data, iSorter)
+                                isSorted(iSorter.sort(data, comparator), comparator),
+                                getMessage(data, iSorter, comparator)
                         )
                 );
     }
 
-    private String getMessage(int[] data, ISorter sorter) {
-        return "before sorting -> " + Arrays.toString(data) + '\n' +
-                "after sorting -> " + Arrays.toString(sorter.sort(data)) + '\n';
+    private <T> String getMessage(T[] data, ISorter<T> sorter, Comparator<T> comparator) {
+        return "\nbefore sorting -> " + Arrays.toString(data) + '\n' +
+                "after sorting  -> " + Arrays.toString(sorter.sort(data, comparator)) + '\n';
     }
 }

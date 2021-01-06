@@ -1,5 +1,7 @@
 package ru.imatveev.algorithms.sort;
 
-public interface ISorter {
-    int[] sort(int[] data);
+import java.util.Comparator;
+
+public interface ISorter<T> {
+    T[] sort(T[] data, Comparator<T> comparator);
 }

@@ -6,4 +6,10 @@ public class SortUtil {
         data[hi] = data[low];
         data[low] = mid;
     }
+
+    public static <T> void swap(T[] data, int hi, int low) {
+        T mid = data[hi];
+        data[hi] = data[low];
+        data[low] = mid;
+    }
 }

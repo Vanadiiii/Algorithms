@@ -1,21 +1,23 @@
 package ru.imatveev.algorithms.sort;
 
+import java.util.Comparator;
+
 import static ru.imatveev.algorithms.sort.util.SortUtil.swap;
 
-public class ShakerSorter implements ISorter {
+public class ShakerSorter<T> implements ISorter<T> {
     @Override
-    public int[] sort(int[] data) {
+    public T[] sort(T[] data, Comparator<T> comparator) {
         int left = 0;
         int right = data.length - 1;
         do {
             for (int i = left; i < right; i++) {
-                if (data[i] > data[i + 1]) {
+                if (comparator.compare(data[i], data[i + 1]) > 0) {
                     swap(data, i, i + 1);
                 }
             }
             right--;
             for (int i = right; i > left; i--) {
-                if (data[i] < data[i - 1]) {
+                if (comparator.compare(data[i - 1], data[i]) > 0) {
                     swap(data, i, i - 1);
                 }
             }
