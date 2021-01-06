@@ -19,6 +19,7 @@ public class SortTest {
     private static ISorter shakerSorter;
     private static ISorter shellSorter;
     private static ISorter heapSorter;
+    private static ISorter quickSorter;
 
     @BeforeAll
     public static void init() {
@@ -29,6 +30,7 @@ public class SortTest {
         shakerSorter = new ShakerSorter();
         shellSorter = new ShellSorter();
         heapSorter = new HeapSorter();
+        quickSorter = new QuickSorter();
     }
 
     @Test
@@ -66,10 +68,17 @@ public class SortTest {
         test(heapSorter);
     }
 
+    @Test
+    void quickSortTest() {
+        test(quickSorter);
+    }
+
     private void test(ISorter iSorter) {
-        Stream.generate(() -> getRandom(100))
+        int length = 100;
+        int count = 100;
+        Stream.generate(() -> getRandom(length))
                 .parallel()
-                .limit(100)
+                .limit(count)
                 .forEach(
                         data -> assertTrue(
                                 isSorted(iSorter.sort(data)),
