@@ -5,11 +5,13 @@ import org.junit.jupiter.api.Test;
 import ru.imatveev.algorithms.sort.*;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ru.imatveev.algorithms.util.TestUtil.getRandom;
-import static ru.imatveev.algorithms.util.TestUtil.isSorted;
+import static ru.imatveev.algorithms.util.TestUtil.*;
 
 public class SortTest {
     private static ISorter insertionSorter;
@@ -20,6 +22,7 @@ public class SortTest {
     private static ISorter shellSorter;
     private static ISorter heapSorter;
     private static ISorter quickSorter;
+    private static List<int[]> startArrays;
 
     @BeforeAll
     public static void init() {
@@ -30,7 +33,8 @@ public class SortTest {
         shakerSorter = new ShakerSorter();
         shellSorter = new ShellSorter();
         heapSorter = new HeapSorter();
-        quickSorter = new QuickSorter();
+        quickSorter = new QuickRecursiveSorter();
+        startArrays = createStartData(() -> getRandom(1000), 1000);
     }
 
     @Test
@@ -73,18 +77,20 @@ public class SortTest {
         test(quickSorter);
     }
 
-    private void test(ISorter iSorter) {
-        int length = 100;
-        int count = 100;
-        Stream.generate(() -> getRandom(length))
+    private static List<int[]> createStartData(Supplier<int[]> scenario, int count) {
+        return Stream.generate(scenario)
                 .parallel()
                 .limit(count)
-                .forEach(
-                        data -> assertTrue(
-                                isSorted(iSorter.sort(data)),
-                                getMessage(data, iSorter)
-                        )
-                );
+                .collect(Collectors.toList());
+    }
+
+    private void test(ISorter iSorter) {
+        startArrays.forEach(
+                data -> assertTrue(
+                        isSorted(iSorter.sort(data)),
+                        getMessage(data, iSorter)
+                )
+        );
     }
 
     private String getMessage(int[] data, ISorter sorter) {

@@ -20,4 +20,18 @@ public class TestUtil {
                 .mapToInt(integer -> integer)
                 .toArray();
     }
+
+    public static int[] getBest(int length) {
+        return Stream.iterate(0, i -> i + 1)
+                .limit(length)
+                .mapToInt(integer -> integer)
+                .toArray();
+    }
+
+    public static int[] getWorst(int length) {
+        return Stream.iterate(length - 1, i -> i - 1)
+                .limit(length)
+                .mapToInt(integer -> integer)
+                .toArray();
+    }
 }
