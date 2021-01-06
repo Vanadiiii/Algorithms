@@ -1,8 +1,10 @@
 package ru.imatveev.algorithms;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.imatveev.algorithms.sort.*;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,41 +12,55 @@ import static ru.imatveev.algorithms.util.TestUtil.getRandom;
 import static ru.imatveev.algorithms.util.TestUtil.isSorted;
 
 public class SortTest {
+    private static ISorter insertionSorter;
+    private static ISorter binaryInsertionSorter;
+    private static ISorter selectionSorter;
+    private static ISorter bubbleSorter;
+    private static ISorter shakerSorter;
+
+    @BeforeAll
+    public static void init() {
+        insertionSorter = new InsertionSorter();
+        binaryInsertionSorter = new BinaryInsertionSorter();
+        selectionSorter = new SelectionSorter();
+        bubbleSorter = new BubbleSorter();
+        shakerSorter = new ShakerSorter();
+    }
+
     @Test
     void insertionSortTest() {
-        ISorter iSorter = new InsertionSorter();
-        test(iSorter);
+        test(insertionSorter);
     }
 
     @Test
     void binaryInsertionSortTest() {
-        ISorter iSorter = new BinaryInsertionSorter();
-        test(iSorter);
+        test(binaryInsertionSorter);
     }
 
     @Test
     void selectionSortTest() {
-        ISorter iSorter = new SelectionSorter();
-        test(iSorter);
+        test(selectionSorter);
     }
 
     @Test
     void bubbleSortTest() {
-        ISorter iSorter = new BubbleSorter();
-        test(iSorter);
+        test(bubbleSorter);
     }
 
     @Test
     void shakerSortTest() {
-        ISorter iSorter = new ShakerSorter();
-        test(iSorter);
+        test(shakerSorter);
     }
 
     private void test(ISorter iSorter) {
-        Stream.iterate(0, i -> i + 1)
+        Stream.generate(() -> getRandom(100))
                 .parallel()
                 .limit(100)
-                .map(integer -> getRandom(100))
-                .forEach(data -> assertTrue(isSorted(iSorter.sort(data))));
+                .forEach(data -> assertTrue(isSorted(iSorter.sort(data)), getMessage(data, iSorter)));
+    }
+
+    private String getMessage(int[] data, ISorter sorter) {
+        return "before sorting -> " + Arrays.toString(data) + '\n' +
+                "after sorting -> " + Arrays.toString(sorter.sort(data)) + '\n';
     }
 }
