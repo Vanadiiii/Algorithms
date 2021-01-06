@@ -17,6 +17,7 @@ public class SortTest {
     private static ISorter selectionSorter;
     private static ISorter bubbleSorter;
     private static ISorter shakerSorter;
+    private static ISorter shellSorter;
 
     @BeforeAll
     public static void init() {
@@ -25,6 +26,7 @@ public class SortTest {
         selectionSorter = new SelectionSorter();
         bubbleSorter = new BubbleSorter();
         shakerSorter = new ShakerSorter();
+        shellSorter = new ShellSorter();
     }
 
     @Test
@@ -50,6 +52,11 @@ public class SortTest {
     @Test
     void shakerSortTest() {
         test(shakerSorter);
+    }
+
+    @Test
+    void shellSortTest() {
+        test(shellSorter);
     }
 
     private void test(ISorter iSorter) {
